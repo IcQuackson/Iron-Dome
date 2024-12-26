@@ -9,6 +9,8 @@ services:
     working_dir: /irondome
     environment:
       - DEBIAN_FRONTEND=noninteractive
+    cap_add:
+      - SYS_ADMIN
     stdin_open: true
     tty: true
     build:

@@ -21,6 +21,3 @@ class MemoryMonitor:
 		process = psutil.Process(os.getpid())
 		memory_usage_mb = process.memory_info().rss / (1024 ** 2) # Convert bytes to MB
 		return memory_usage_mb
-	
-	def has_memory_exceeded_limit(self):
-		return self.get_memory_usage() > self.memory_limit_mb

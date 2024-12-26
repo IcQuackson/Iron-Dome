@@ -9,36 +9,43 @@ import utils
 from logger_setup import setup_logger
 import logging
 from logging.handlers import RotatingFileHandler
-from jobs.MemoryMonitor import handle_memory_monitor, MemoryMonitor
-from utils import signal_handler
+from monitors.MemoryMonitor import MemoryMonitor
+from monitors.DiskMonitor import DiskMonitor, handle_disk_monitor
+from utils import signal_handler, parse_args, check_args
 
+DEFAULT_PATH = "/home"
 
-os.makedirs("/var/log/irondome", exist_ok=True)
 shutdown_event = threading.Event()
 
 def main():
 
 	monitor = MemoryMonitor()
 	monitor.set_memory_limit()
+	os.makedirs("/var/log/irondome", exist_ok=True)
 
 	try:
 
 		setup_logger()
 		logger = logging.getLogger()
 
-		#t1 = threading.Thread(target=handle_memory_monitor, daemon=True)
+		args = parse_args()
+		check_args(args)
+		logger.info(f"Monitoring: {', '.join(path for path in args['paths'])}")
+
+		t1 = threading.Thread(target=handle_disk_monitor, args=(args["paths"],), daemon=True)
 		#t2 = threading.Thread(target=feature2, daemon=True)
-		#t1.start()
+		t1.start()
 		#t2.start()
 
-		l = []
+		""" 		l = []
 		while not shutdown_event.is_set(): # This tests memory usage
-			l.append("*" * 1024)
+			l.append("*" * 1024) """
 
 		while not shutdown_event.is_set():
 			time.sleep(1)
 	except MemoryError:
 		logger.info(f"Memory has exceed the {monitor.get_memory_limit()} MB limit. Shuting down...")
+		shutdown_event.set()
 
 
 
