@@ -42,6 +42,7 @@ def main():
 			l.append("*" * 1024) """
 
 		while not shutdown_event.is_set():
+			#logger.info(f"Memory usage: {monitor.get_memory_usage()}")
 			time.sleep(1)
 	except MemoryError:
 		logger.info(f"Memory has exceed the {monitor.get_memory_limit()} MB limit. Shuting down...")

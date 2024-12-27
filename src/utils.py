@@ -24,9 +24,15 @@ def check_args(args):
 		logger.info("An error occured")
 		sys.exit(1)
 	
-	for path in args["paths"]:
-		if not os.path.exists(path):
-			logger.info(f"Path '{path}' is not valid")
+	paths = args["paths"]
+	
+	for p in paths:
+		if not os.path.exists(p):
+			logger.info(f"Path '{p}' is not valid")
 			sys.exit(1)
+	
+	if len(paths) != len(set(paths)):
+		logger.info("Providing duplicate paths is not valid")
+		sys.exit(1)
 
 		
