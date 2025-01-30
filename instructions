@@ -1,0 +1,19 @@
+sudo apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    build-essential \
+    python3-dev \
+    tini \
+	supervisor \
+    --no-install-recommends
+
+sudo pip3 install psutil inotify_simple watchdog pyfanotify
+
+# run as root
+# enter root first
+sudo -i
+
+root@webserv-VirtualBox:/home/webserv/Desktop/42/Iron-Dome# chown root:root test.sh
+root@webserv-VirtualBox:/home/webserv/Desktop/42/Iron-Dome# chmod 700 test.sh
+
+sudo apt-get update && sudo apt-get install daemon
