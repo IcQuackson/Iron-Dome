@@ -17,3 +17,6 @@ root@webserv-VirtualBox:/home/webserv/Desktop/42/Iron-Dome# chown root:root test
 root@webserv-VirtualBox:/home/webserv/Desktop/42/Iron-Dome# chmod 700 test.sh
 
 sudo apt-get update && sudo apt-get install daemon
+
+sudo apt-get install libdaemon-dev
+compile with -ldaemon

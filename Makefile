@@ -1,21 +1,34 @@
-
 SRC_DIR = ./src
-CONTAINER_NAME = linux
+INCLUDE_DIR = ./include
+BIN_DIR = ./bin
+CC = gcc
+CFLAGS = -Wall -Wextra -O2 -I$(INCLUDE_DIR)
+TARGET = iron_dome
+RESOURCES = /home /etc
 
-all: docker-compose.yml Dockerfile
-	sudo docker compose -f docker-compose.yml up --build -d 
+SOURCES = $(wildcard $(SRC_DIR)/*.c)
+OBJECTS = $(patsubst $(SRC_DIR)/%.c, $(BIN_DIR)/%.o, $(SOURCES))
 
-restart:
-	sudo docker compose restart
+all: $(TARGET)
 
-rerun: clean all
+$(TARGET): $(OBJECTS)
+	$(CC) $(OBJECTS) -o $(TARGET)
 
-clean:
-	- sudo docker compose down
-	- sudo docker system prune -a
+$(BIN_DIR)/%.o: $(SRC_DIR)/%.c | $(BIN_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-stop:
-	sudo docker compose down
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
 
-connect:
-	sudo docker exec -it $(CONTAINER_NAME) bash
+clean: kill
+	rm -rf $(BIN_DIR) $(TARGET)
+
+re: clean all
+
+run: kill all
+	sudo ./$(TARGET) $(RESOURCES)
+
+kill:
+	- sudo killall $(TARGET) 2> /dev/null
+
+.PHONY: all clean re run
